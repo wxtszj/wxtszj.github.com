@@ -356,5 +356,100 @@ oXdm.onmousedown = function(ev){
     }
 
 })()
+;
+    var oC = document.getElementById('c1');
+    oC.width = document.documentElement.clientWidth;
+    oC.height = document.documentElement.clientHeight-150;
+    var gd = oC.getContext('2d');
+    var N = 5;
+    var aPoint = [];
+    for(var i=0;i<N;i++){
+        aPoint.push({
+            x:rnd(0,oC.width),
+            y:rnd(0,oC.height),
+            iSpeedX:rnd(-10,10),
+            iSpeedY:rnd(-10,10)
+        });
+    }
+
+    var COUNT = 20;
+    var aOldPoint = [];
+
+
+
+    //运动、画点
+    setInterval(function(){
+        gd.clearRect(0,0,oC.width,oC.height);
+
+        //运动
+        for(var i=0;i<aPoint.length;i++){
+
+            if(aPoint[i].x<0){
+                aPoint[i].iSpeedX*=-1;
+            }
+            if(aPoint[i].y<0){
+                aPoint[i].iSpeedY*=-1;
+            }
+            if(aPoint[i].x>oC.width){
+                aPoint[i].iSpeedX*=-1;
+            }
+            if(aPoint[i].y>oC.height){
+                aPoint[i].iSpeedY*=-1;
+            }
+
+
+
+            aPoint[i].x+=aPoint[i].iSpeedX;
+            aPoint[i].y+=aPoint[i].iSpeedY;
+        }
+
+
+        //画点
+        for(var i=0;i<aPoint.length;i++){
+            drawPoint(aPoint[i]);
+        }
+
+        //连线
+        gd.beginPath();
+        gd.moveTo(aPoint[0].x,aPoint[0].y);
+        for(var i=1;i<aPoint.length;i++){
+            gd.lineTo(aPoint[i].x,aPoint[i].y);
+        }
+        gd.closePath();
+        gd.strokeStyle = '#fff';
+        gd.stroke();
+
+
+        var arr = [];
+        for(var i=0;i<aPoint.length;i++){
+            arr.push({
+                x:aPoint[i].x,
+                y:aPoint[i].y,
+                iSpeedX:aPoint[i].iSpeedX,
+                iSpeedY:aPoint[i].iSpeedY
+            });
+        }
+        aOldPoint.push(arr);
+        if(aOldPoint.length>COUNT){
+            aOldPoint.shift();
+        }
+        //画老点
+        gd.beginPath();
+        for(var i=0;i<aOldPoint.length;i++){
+            gd.moveTo(aOldPoint[i][0].x,aOldPoint[i][0].y);
+            for(var j=1;j<aOldPoint[i].length;j++){
+                gd.lineTo(aOldPoint[i][j].x,aOldPoint[i][j].y);
+            }
+            gd.closePath();
+            gd.strokeStyle = 'rgba(0,0,2,'+(i/aOldPoint.length/3)+')';
+            gd.stroke();
+        }
+    },16);
+
+    function drawPoint(oPoint){
+        gd.beginPath();
+        gd.fillStyle = '#ccc';
+        gd.fillRect(oPoint.x,oPoint.y,1,1);
+    }
 
 
