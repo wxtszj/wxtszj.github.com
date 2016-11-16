@@ -19,7 +19,7 @@ body {
   font-size: 200px; }
 #edb{z-index: 999;
   position: fixed;
-  background: #000;
+  background: url("../img/jz.gif") no-repeat 50% 50% #000;
   width: 100%;
   height: 100%;
   text-align: center;
